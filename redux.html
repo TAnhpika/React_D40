@@ -1,11 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redux</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Redux</title>
+    </head>
+    <body>
+        <h1 id="counter-value">0</h1>
+        <button id="increase">Increase</button>
+
+        <!-- bỏ .min -> hiện chi tiết tên props của phương thức trong redux  -->
+        <script src="https://cdn.jsdelivr.net/npm/redux@4.2.1/dist/redux.js"></script>
+        <script>
+            // 1. Tạo init state
+            const initState = 10;
+
+            // 2. Tạo reducer
+            function reducer(state, action) {
+                switch (action.type) {
+                    case "increase":
+                        return state + action.payload;
+
+                    default:
+                        return state;
+                }
+            }
+
+            // 3. Tạo store
+            const store = Redux.createStore(reducer, initState);
+
+            const counterValue = document.querySelector("#counter-value");
+            const increase = document.querySelector("#increase");
+
+            // Render UI với giá trị khởi tạo của state
+            function render() {
+                counterValue.textContent = store.getState();
+            }
+            render();
+
+            // Re-render khi state được cập nhập
+            const unsubscribe1 = store.subscribe(render);
+            const unsubscribe2 = store.subscribe(render);
+
+            // Xử lý khi click
+            increase.addEventListener("click", () => {
+                store.dispatch({
+                    type: "increase",
+                    payload: 2,
+                });
+            });
+        </script>
+    </body>
 </html>
