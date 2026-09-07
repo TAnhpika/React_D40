@@ -39,8 +39,7 @@
             render();
 
             // Re-render khi state được cập nhập
-            const unsubscribe1 = store.subscribe(render);
-            const unsubscribe2 = store.subscribe(render);
+            const unsubscribe = store.subscribe(render);
 
             // Xử lý khi click
             increase.addEventListener("click", () => {

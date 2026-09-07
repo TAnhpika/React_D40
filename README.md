@@ -31,7 +31,7 @@
 - Event handler: xử lý sự kiện click -> dispatch: bắn đi 1 action
 - Store:
 
-* (Có) Reducer: nhận state hiện tại + action => xử lý +> state mới
+* (Có) Reducer: nhận state hiện tại + action => xử lý => state mới
 * (Chứa) State: nhận & cập nhập state -> re-render UI
 
 ## Redux concepts:
@@ -42,7 +42,7 @@
 + action type: ~ CRUD (required)
 + action payload: dữ liệu mang theo (optional): phục vụ xử lý logic trong reducer
 - Dispatch: bắn đi 1 action
-- Reducer: nhận state hiện tại + action => xử lý +> state mới
+- Reducer: nhận state hiện tại + action => xử lý => state mới
 
 ### Quy trình:
 

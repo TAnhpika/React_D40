@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Todo</title>
+    </head>
+    <body>
+        <h1>Todo</h1>
+        <form action="" id="form">
+            <input type="text" id="task-name" placeholder="Enter task..." />
+            <button>Add</button>
+        </form>
+        <ul id="list"></ul>
+
+        <script src="https://cdn.jsdelivr.net/npm/redux@4.2.1/dist/redux.js"></script>
+
+        <script>
+            const initState = [
+                {
+                    name: "Rua bat",
+                    completed: false,
+                },
+                {
+                    name: "Quet nha",
+                    completed: false,
+                },
+            ];
+
+            function reducer(state, action) {
+                switch (action.type) {
+                    case "add":
+                        return [action.payload, ...state];
+
+                    default:
+                        return state;
+                }
+            }
+
+            const store = Redux.createStore(reducer, initState);
+
+            const list = document.querySelector("#list");
+            const form = document.querySelector("#form");
+            const taskName = document.querySelector("#task-name");
+
+            function renderTasks() {
+                const tasks = store.getState();
+
+                list.innerHTML = tasks
+                    .map(
+                        (task) =>
+                            `
+                    <li>
+                        ${task.name} (${task.completed ? "Done" : "Pending"})
+                    </li>
+                        `,
+                    )
+                    .join("");
+            }
+            renderTasks();
+
+            store.subscribe(renderTasks);
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const newTask = {
+                    name: taskName.value.trim(),
+                    completed: false,
+                };
+
+                if (!newTask) return;
+
+                store.dispatch({
+                    type: "add",
+                    payload: newTask,
+                });
+
+                taskName.value = "";
+                taskName.focus();
+            });
+        </script>
+    </body>
+</html>
