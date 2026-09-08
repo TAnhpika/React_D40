@@ -13,8 +13,42 @@
         </form>
         <ul id="list"></ul>
 
-        <script src="https://cdn.jsdelivr.net/npm/redux@4.2.1/dist/redux.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/redux@4.2.1/dist/redux.js"></script> -->
 
+        <script>
+            // My Redux
+            const Redux = {
+                __DO_NOT_USE__ActionTypes: {
+                    type: "@@F8-redux/INIT.a.b.c",
+                },
+                createStore(reducer, initState) {
+                    let state = reducer(
+                        initState,
+                        this.__DO_NOT_USE__ActionTypes,
+                    );
+
+                    const listeners = [];
+
+                    return {
+                        getState() {
+                            return state;
+                        },
+                        dispatch(action) {
+                            state = reducer(state, action);
+                            listeners.forEach((listener) => listener());
+                        },
+                        subscribe(listener) {
+                            listeners.push(listener);
+
+                            return () => {
+                                const index = listeners.indexOf(listener);
+                                listeners.splice(index, 1);
+                            };
+                        },
+                    };
+                },
+            };
+        </script>
         <script>
             const initState = [
                 {
@@ -28,6 +62,8 @@
             ];
 
             function reducer(state, action) {
+                console.log(state, action);
+
                 switch (action.type) {
                     case "add":
                         return [action.payload, ...state];
@@ -42,24 +78,6 @@
             const list = document.querySelector("#list");
             const form = document.querySelector("#form");
             const taskName = document.querySelector("#task-name");
-
-            function renderTasks() {
-                const tasks = store.getState();
-
-                list.innerHTML = tasks
-                    .map(
-                        (task) =>
-                            `
-                    <li>
-                        ${task.name} (${task.completed ? "Done" : "Pending"})
-                    </li>
-                        `,
-                    )
-                    .join("");
-            }
-            renderTasks();
-
-            store.subscribe(renderTasks);
 
             form.addEventListener("submit", (e) => {
                 e.preventDefault();
@@ -78,6 +96,30 @@
 
                 taskName.value = "";
                 taskName.focus();
+            });
+
+            function renderTasks() {
+                const tasks = store.getState();
+
+                list.innerHTML = tasks
+                    .map(
+                        (task) =>
+                            `
+                    <li>
+                        ${task.name} (${task.completed ? "Done" : "Pending"})
+                    </li>
+                        `,
+                    )
+                    .join("");
+            }
+            renderTasks();
+
+            const unsubscribe1 = store.subscribe(renderTasks);
+            const unsubscribe2 = store.subscribe(() => {
+                console.log("2: State updated");
+            });
+            const unsubscribe3 = store.subscribe(() => {
+                console.log("3: State updated");
             });
         </script>
     </body>
